@@ -1,9 +1,9 @@
 import { IsNotEmpty, IsString, IsNumber, MinLength } from 'class-validator';
 
-export class CreateUserDto {
+export class UserDTO {
   @IsString()
   @IsNotEmpty()
-  @MinLength(5)
+  @MinLength(3)
   name: string;
 
   @IsNumber()

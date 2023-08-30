@@ -1,9 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+
 import { User } from './entities/user.entity';
+import { UserDTO } from './dto/create-user.dto';
+import { UpdateUserDTO } from './dto/update-user.dto';
+
 import { MongoRepository } from 'typeorm';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class UsersService {
@@ -12,7 +15,7 @@ export class UsersService {
     private usersRepository: MongoRepository<User>,
   ) {}
 
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: UserDTO): Promise<UserDTO> {
     return await this.usersRepository.save(createUserDto);
   }
 
@@ -21,15 +24,22 @@ export class UsersService {
     return users;
   }
 
-  findOne(id) {
-    return this.usersRepository.findOne(id);
+  async findOne(id: ObjectId): Promise<User> {
+    const user = await this.usersRepository.findOne({
+      where: {
+        _id: new ObjectId(id),
+      },
+    });
+    return user;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return this.usersRepository.update(id, updateUserDto);
+  async update(id: ObjectId, updateUserDto: UpdateUserDTO) {
+    const user = await this.usersRepository.update(id, updateUserDto);
+    return user;
   }
 
-  remove(id: number) {
-    return this.usersRepository.delete(id);
+  async remove(id: ObjectId) {
+    const user = await this.usersRepository.delete(id);
+    return user;
   }
 }

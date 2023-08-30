@@ -1,5 +1,6 @@
 import { ObjectId } from 'mongodb';
-import { Entity, Column, ObjectIdColumn, BaseEntity } from 'typeorm';
+import { Card } from 'src/cards/entities/card.entity';
+import { Entity, Column, ObjectIdColumn, BaseEntity, OneToMany } from 'typeorm';
 
 @Entity()
 export class User extends BaseEntity {
@@ -14,4 +15,7 @@ export class User extends BaseEntity {
 
   @Column()
   job: string;
+
+  @OneToMany(() => Card, (card) => card.user)
+  cards: Card[];
 }

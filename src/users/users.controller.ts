@@ -1,25 +1,26 @@
 import {
   Controller,
-  Get,
   Post,
+  Get,
+  Put,
+  Delete,
   Body,
   Param,
-  Delete,
   BadRequestException,
   NotFoundException,
-  Put,
 } from '@nestjs/common';
-import { User } from './entities/user.entity';
+
 import { ObjectId } from 'mongodb';
+
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
+import { UserDTO } from './dto/create-user.dto';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  create(@Body() user: CreateUserDto) {
+  create(@Body() user: UserDTO) {
     if (!user.name || !user.age) {
       throw new BadRequestException('A user must have a name and age');
     }
@@ -32,16 +33,19 @@ export class UsersController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id): Promise<User> {
+  async findOne(@Param('id') id: ObjectId): Promise<UserDTO> {
     const user = ObjectId.isValid(id) && (await this.usersService.findOne(id));
     if (!user) {
-      throw new NotFoundException();
+      throw new NotFoundException(`User with ${id} does not exist`);
     }
     return user;
   }
 
   @Put(':id')
-  async update(@Param('id') id, @Body() user: Partial<User>): Promise<void> {
+  async update(
+    @Param('id') id: ObjectId,
+    @Body() user: Partial<UserDTO>,
+  ): Promise<void> {
     const exists =
       ObjectId.isValid(id) && (await this.usersService.findOne(id));
     if (!exists) {
@@ -52,7 +56,7 @@ export class UsersController {
   }
 
   @Delete(':id')
-  async remove(@Param('id') id) {
+  async remove(@Param('id') id: ObjectId) {
     const exists =
       ObjectId.isValid(id) && (await this.usersService.findOne(id));
     if (!exists) {
