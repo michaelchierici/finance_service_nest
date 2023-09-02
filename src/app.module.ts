@@ -6,6 +6,8 @@ import { AppService } from './app.service';
 
 import { User } from './users/entities/user.entity';
 import { UsersModule } from './users/users.module';
+import { Card } from './cards/entities/card.entity';
+import { CardsModule } from './cards/cards.module';
 
 @Module({
   imports: [
@@ -17,12 +19,14 @@ import { UsersModule } from './users/users.module';
       username: process.env.MONGODB_USERNAME,
       password: process.env.MONGODB_PASSWORD,
       database: process.env.MONGODB_DATABASE,
-      entities: [User],
+      entities: [User, Card],
       useUnifiedTopology: false,
       useNewUrlParser: true,
       logging: true,
+      autoLoadEntities: true,
     }),
     UsersModule,
+    CardsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

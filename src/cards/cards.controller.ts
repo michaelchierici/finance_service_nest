@@ -12,15 +12,16 @@ import {
 
 import { ObjectId } from 'mongodb';
 import { CardDTO } from './dto/create-card.dto';
+import { CardsService } from './cards.service';
 
 @Controller('cards')
 export class CardsController {
-  constructor(private readonly cardsService) {}
+  constructor(private readonly cardsService: CardsService) {}
 
   @Post()
   create(@Body() card: CardDTO) {
     if (!card.nickname) {
-      throw new BadRequestException('A user must have a name and age');
+      throw new BadRequestException('A user must have nickname');
     }
     return this.cardsService.create(card);
   }
@@ -49,7 +50,11 @@ export class CardsController {
     if (!exists) {
       throw new NotFoundException('Card not found!');
     }
-    await this.cardsService.update(id, card);
+    const formatCardToUpdate = {
+      nickname: card.nickname,
+    };
+
+    await this.cardsService.update(id, formatCardToUpdate);
   }
 
   @Delete(':id')

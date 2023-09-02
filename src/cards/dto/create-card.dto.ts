@@ -1,10 +1,4 @@
-import {
-  IsNotEmpty,
-  IsString,
-  IsNumber,
-  MinLength,
-  IsEmpty,
-} from 'class-validator';
+import { IsNotEmpty, IsString, IsNumber, MinLength } from 'class-validator';
 
 export class CardDTO {
   @IsString()
@@ -21,6 +15,6 @@ export class CardDTO {
   number: number;
 
   @IsNumber()
-  @IsEmpty()
-  limit: string;
+  @IsNotEmpty()
+  limit: number;
 }

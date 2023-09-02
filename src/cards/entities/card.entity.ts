@@ -1,6 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { User } from 'src/users/entities/user.entity';
-import { Entity, Column, ObjectIdColumn, BaseEntity, ManyToOne } from 'typeorm';
+import { Entity, Column, ObjectIdColumn, BaseEntity } from 'typeorm';
 
 @Entity()
 export class Card extends BaseEntity {
@@ -18,7 +17,4 @@ export class Card extends BaseEntity {
 
   @Column()
   limit: number;
-
-  @ManyToOne(() => User, (user) => user.cards)
-  user: User[];
 }
